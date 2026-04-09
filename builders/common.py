@@ -65,13 +65,13 @@ def fmt_header(run, bold=False):
     run.font.bold = bold
     run.font.italic = False
 
-def fmt_body(run, bold=False, size=None):
+def fmt_body(run, bold=False, italic=False, size=None):
     """Font 13pt (mặc định), dùng cho toàn bộ thân văn bản."""
     run.font.name = FONT_NAME
     run._element.rPr.rFonts.set(qn('w:eastAsia'), FONT_NAME)
     run.font.size = size or FONT_SIZE_BODY
     run.font.bold = bold
-    run.font.italic = False
+    run.font.italic = italic
 
 def para_spacing_header(paragraph, align=None):
     """Giãn dòng Exactly 15pt, trên/dưới 0pt – dùng cho header & footer bảng."""
@@ -174,7 +174,8 @@ def add_can_cu(doc, data):
     for cc in can_cu_list:
         p = doc.add_paragraph()
         para_spacing_body(p) # Mặc định JUSTIFY
-        fmt_body(p.add_run(f"- {cc}"))
+        r = p.add_run(f"- {cc}")
+        fmt_body(r, italic=True)
 
 def add_quyet_dinh_label(doc):
     p = doc.add_paragraph()
