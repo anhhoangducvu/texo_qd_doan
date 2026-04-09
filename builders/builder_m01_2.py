@@ -52,7 +52,7 @@ def build(data):
         
         p = hdr_cells[i].paragraphs[0]
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        para_spacing_body(p, align=WD_ALIGN_PARAGRAPH.CENTER)
+        para_spacing_table(p, align=WD_ALIGN_PARAGRAPH.CENTER)
         fmt_body(p.add_run(col_headers[i]), bold=True)
         set_cell_vertical_align_center(hdr_cells[i])
 
@@ -67,19 +67,19 @@ def build(data):
         # Ô STT – căn giữa ngang + vertical center
         p_stt = row.cells[0].paragraphs[0]
         p_stt.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        para_spacing_body(p_stt, align=WD_ALIGN_PARAGRAPH.CENTER)
+        para_spacing_table(p_stt, align=WD_ALIGN_PARAGRAPH.CENTER)
         fmt_body(p_stt.add_run(str(idx)))
         set_cell_vertical_align_center(row.cells[0])
 
         # Ô họ tên – căn trái + vertical center
         p_ten = row.cells[1].paragraphs[0]
-        para_spacing_body(p_ten) # Mặc định JUSTIFY but for single line it looks like LEFT
+        para_spacing_table(p_ten) # Mặc định giãn 3pt/3pt/15pt
         fmt_body(p_ten.add_run(f"{m['trinh_do']}. {m['ho_ten']}"))
         set_cell_vertical_align_center(row.cells[1])
 
         # Ô chức vụ – căn trái + vertical center
         p_cv = row.cells[2].paragraphs[0]
-        para_spacing_body(p_cv)
+        para_spacing_table(p_cv)
         fmt_body(p_cv.add_run(m["chuc_vu"]))
         set_cell_vertical_align_center(row.cells[2])
 

@@ -1,7 +1,12 @@
 import streamlit as st
 import io
 import re
-from builders import builder_m01, builder_m01_2, builder_m02, builder_m03, builder_m04
+from builders import (
+    builder_m01, builder_m01_2,
+    builder_m02, builder_m02_2,
+    builder_m03, builder_m03_2,
+    builder_m04, builder_m04_2,
+)
 
 def build_ngay_qd_display(ngay_qd_raw: str) -> str:
     """
@@ -82,8 +87,18 @@ st.markdown("""
         width: 100%;
         border-radius: 5px;
         height: 3em;
-        background-color: #1E3A8A;
-        color: white;
+        background-color: #1E3A8A !important;
+        color: #ffffff !important;
+        border: 1px solid #1E3A8A !important;
+    }
+    .stButton>button:hover {
+        background-color: #2563EB !important;
+        border-color: #2563EB !important;
+        color: #ffffff !important;
+    }
+    /* Đảm bảo icon hoặc text bên trong nút cũng màu trắng */
+    .stButton>button * {
+        color: #ffffff !important;
     }
     .stExpander {
         background-color: white;
@@ -157,9 +172,9 @@ with st.expander("📖 Hướng dẫn sử dụng", expanded=False):
 |---|---|
 | **M01** – Thành lập đoàn | Đoàn từ 1–3 thành viên (tự động chọn) |
 | **M01.2** – Thành lập đoàn | Đoàn từ 4 thành viên trở lên (tự động chọn) |
-| **M02** – Bổ sung cán bộ | Khi cần thêm người vào đoàn đã có |
-| **M03** – Bổ sung & thay thế | Khi vừa thêm người mới vừa rút người cũ |
-| **M04** – Phân công nhiệm vụ | Khi cần ra QĐ phân công rõ nhiệm vụ từng người |
+| **M02** – Bổ sung cán bộ | 1–3 người (M02) hoặc >3 người (M02.2) |
+| **M03** – Bổ sung & thay thế | 1–3 người (M03) hoặc >3 người (M03.2) |
+| **M04** – Phân công nhiệm vụ | 1–3 người (M04) hoặc >3 người (M04.2) |
 
 ---
 
@@ -362,46 +377,67 @@ data = {
 # PREVIEW & GENERATE
 errors, members_valid = validate(data)
 
-if not errors:
+if errors:
+    st.warning("⚠️ Vui lòng hoàn thiện các thông tin còn thiếu để tạo file.")
+    with st.expander("Các lỗi cần sửa"):
+        for e in errors:
+            st.write(f"- {e}")
+else:
     n = len(members_valid)
-    if loai_qd == "Thành lập đoàn Tư vấn":
-        template_used = "M01" if n <= 3 else "M01.2"
-    elif "M02" in loai_qd: template_used = "M02"
-    elif "M03" in loai_qd: template_used = "M03"
-    else: template_used = "M04"
-    
-    st.info(f"📄 Mẫu sẽ dùng: **{template_used}** | 👥 Số thành viên: **{n}** | 🏢 **{ten_tt}**")
-    
-    if st.button("🖨️ Tạo Quyết định", type="primary"):
+    st.info(f"👥 Đoàn có **{n}** thành viên | 🏢 **{ten_tt}**")
+
+# Nút tạo quyết định luôn hiển thị ở dưới cùng
+if st.button("🖨️ Tạo Quyết định", type="primary", use_container_width=True):
+    if errors:
+        st.error("❌ Vui lòng sửa các lỗi thông tin trước khi tạo file.")
+    else:
         # Cập nhật lại members chỉ lấy những người có tên
         data["members"] = members_valid
+        n = len(members_valid)
         
         try:
-            if template_used == "M01": doc = builder_m01.build(data)
-            elif template_used == "M01.2": doc = builder_m01_2.build(data)
-            elif template_used == "M02": doc = builder_m02.build(data)
-            elif template_used == "M03": doc = builder_m03.build(data)
-            else: doc = builder_m04.build(data)
+            if loai_qd == "Thành lập đoàn Tư vấn":
+                if n <= 3:
+                    doc = builder_m01.build(data); ma_mau = "M01"
+                else:
+                    doc = builder_m01_2.build(data); ma_mau = "M01.2"
+                
+            elif "Bổ sung cán bộ" in loai_qd and "thay thế" not in loai_qd.lower():
+                if n <= 3:
+                    doc = builder_m02.build(data); ma_mau = "M02"
+                else:
+                    doc = builder_m02_2.build(data); ma_mau = "M02.2"
+
+            elif "thay thế" in loai_qd.lower():
+                if n <= 3:
+                    doc = builder_m03.build(data); ma_mau = "M03"
+                else:
+                    doc = builder_m03_2.build(data); ma_mau = "M03.2"
+
+            elif "Phân công" in loai_qd:
+                if n <= 3:
+                    doc = builder_m04.build(data); ma_mau = "M04"
+                else:
+                    doc = builder_m04_2.build(data); ma_mau = "M04.2"
+            else:
+                st.error("❌ Không xác định được loại mẫu phù hợp.")
+                st.stop()
             
             buf = io.BytesIO()
             doc.save(buf)
             buf.seek(0)
             
-            ten_file = f"QD_{template_used}_{data['so_hd_texo'].replace('/', '-')}.docx"
-            st.success("✅ Tạo file thành công!")
+            ten_file = f"QD_{ma_mau}_{data['so_hd_texo'].replace('/', '-')}.docx"
+            st.success(f"✅ Đã tạo xong file theo mẫu {ma_mau}!")
             st.download_button(
                 label="📥 Tải xuống file .docx",
                 data=buf,
                 file_name=ten_file,
-                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                use_container_width=True
             )
         except Exception as e:
             st.error(f"❌ Có lỗi xảy ra: {str(e)}")
-else:
-    st.warning("⚠️ Vui lòng hoàn thiện các thông tin còn thiếu để tạo file.")
-    with st.expander("Các lỗi cần sửa"):
-        for e in errors:
-            st.write(f"- {e}")
 
 st.divider()
 st.warning(

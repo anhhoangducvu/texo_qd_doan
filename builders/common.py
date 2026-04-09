@@ -95,6 +95,18 @@ def para_spacing_body(paragraph, align=WD_ALIGN_PARAGRAPH.JUSTIFY):
     pf.space_after = Pt(0)
     paragraph.alignment = align
 
+def para_spacing_table(paragraph, align=WD_ALIGN_PARAGRAPH.LEFT):
+    """
+    Spacing dành riêng cho nội dung bên trong bảng đính kèm.
+    Before 3pt / After 3pt / Line spacing Exactly 15pt.
+    """
+    pf = paragraph.paragraph_format
+    pf.space_before      = Pt(3)
+    pf.space_after       = Pt(3)
+    pf.line_spacing_rule = WD_LINE_SPACING.EXACTLY
+    pf.line_spacing      = Pt(15)
+    paragraph.alignment  = align
+
 def add_header_table(doc, data):
     """Bảng header 2 cột không viền: logo trái, quốc hiệu phải"""
     table = doc.add_table(rows=1, cols=2)
@@ -193,9 +205,7 @@ def build_dieu1_header(doc, hanh_dong, loai_tu_van, data):
 
     r_content = p1.add_run(
         f" {hanh_dong} đoàn {loai_tu_van} thực hiện hợp đồng số:"
-        f" {data['so_hd_cdt']} ({data['so_hd_texo']}) ngày {data['ngay_hd']}"
-        f" giữa {data['ten_cdt']} với Công ty Cổ phần TEXO Tư vấn và Đầu Tư,"
-        f" về việc {data['noi_dung_hd']}"
+        f" {data['so_hd_cdt']} ({data['so_hd_texo']})"
     )
     fmt_body(r_content)
     return p1
