@@ -67,8 +67,16 @@ if not check_password():
 # Custom Styling
 st.markdown("""
 <style>
+    /* Force Light Theme */
+    [data-testid="stAppViewContainer"] {
+        background-color: #f8f9fa !important;
+        color: #000000 !important;
+    }
+    [data-testid="stSidebar"] {
+        background-color: #ffffff !important;
+    }
     .main {
-        background-color: #f8f9fa;
+        background-color: #f8f9fa !important;
     }
     .stButton>button {
         width: 100%;
@@ -83,13 +91,17 @@ st.markdown("""
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         margin-bottom: 20px;
     }
-    h1 {
-        color: #1E3A8A;
+    h1, h2, h3, h4, h5, h6, p, label, .stMarkdown {
+        color: #1E3A8A !important;
     }
     /* Sửa lỗi khung viền ô nhập liệu bị mờ */
     div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] {
         border: 1px solid #ced4da !important;
         border-radius: 5px !important;
+        background-color: white !important;
+    }
+    input, textarea, select {
+        color: #1E3A8A !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -102,6 +114,19 @@ loai_qd = st.sidebar.radio("Chọn loại văn bản cần lập:", [
     "Bổ sung và thay thế cán bộ (M03)",
     "Phân công nhiệm vụ (M04)",
 ])
+
+# Thông tin tác giả
+st.sidebar.divider()
+st.sidebar.markdown(
+    """
+    <div style='text-align: center;'>
+        <p style='margin-bottom: 5px; font-size: 0.9em; color: #666;'>Tác giả công cụ:</p>
+        <p style='font-weight: bold; color: #1E3A8A; margin-bottom: 0;'>Hoàng Đức Vũ</p>
+        <p style='font-style: italic; font-size: 0.85em; color: #666;'>Trưởng phòng Kỹ thuật - TEXO</p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # Main Title
 st.title("🏗️ TEXO – Lập Quyết định Đoàn Tư vấn")
@@ -388,6 +413,17 @@ st.warning(
     "- **Căn chỉnh tinh** (tab, indent đặc biệt) nếu khác với định dạng mặc định\n"
     "- **Chữ ký số** hoặc chữ ký tay scan\n"
     "- Các **nội dung bổ sung đặc thù** theo từng hợp đồng mà mẫu chung không bao quát\n\n"
-    "Người lập có trách nhiệm đọc lại, đối chiếu quy định Công ty và hoàn thiện "
+    "người lập có trách nhiệm đọc lại, đối chiếu quy định Công ty và hoàn thiện "
     "file trước khi trình ký."
+)
+
+st.sidebar.markdown("---")
+st.markdown(
+    """
+    <div style='text-align: center; padding: 20px; color: #666;'>
+        <p style='margin: 0;'>Phát triển bởi <b>Hoàng Đức Vũ</b> – Trưởng phòng Kỹ thuật TEXO</p>
+        <p style='font-size: 0.8em; margin: 5px 0 0 0;'>© 2026 All Rights Reserved</p>
+    </div>
+    """,
+    unsafe_allow_html=True
 )
