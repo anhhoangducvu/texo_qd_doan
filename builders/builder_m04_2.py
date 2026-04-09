@@ -44,7 +44,7 @@ def _add_danh_sach_page(doc, data):
     p_kt = doc.add_paragraph()
     psb(p_kt, align=WD_ALIGN_PARAGRAPH.CENTER)
     fb(p_kt.add_run(
-        f"Kèm theo Quyết định số: {data['so_qd_display']} ngày {data['ngay_qd_display']}"
+        f"Kèm theo Quyết định số: {data['so_qd_display']} {data['ngay_qd_display']}"
     ))
 
     doc.add_paragraph()   # dòng trống

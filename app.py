@@ -173,7 +173,7 @@ with st.expander("📖 Hướng dẫn sử dụng", expanded=False):
 | **M01** – Thành lập đoàn | Đoàn từ 1–3 thành viên (tự động chọn) |
 | **M01.2** – Thành lập đoàn | Đoàn từ 4 thành viên trở lên (tự động chọn) |
 | **M02** – Bổ sung cán bộ | 1–3 người (M02) hoặc >3 người (M02.2) |
-| **M03** – Bổ sung & thay thế | 1–3 người (M03) hoặc >3 người (M03.2) |
+| **M03** – Bổ sung & thay thế | 1–2 người (M03) hoặc ≥3 người (M03.2) |
 | **M04** – Phân công nhiệm vụ | 1–3 người (M04) hoặc >3 người (M04.2) |
 
 ---
@@ -409,10 +409,11 @@ if st.button("🖨️ Tạo Quyết định", type="primary", use_container_widt
                     doc = builder_m02_2.build(data); ma_mau = "M02.2"
 
             elif "thay thế" in loai_qd.lower():
-                if n <= 3:
+                if n <= 2:
                     doc = builder_m03.build(data); ma_mau = "M03"
                 else:
                     doc = builder_m03_2.build(data); ma_mau = "M03.2"
+                    st.info(f"ℹ️ Đoàn có {n} người → tự động dùng mẫu M03.2 (danh sách đính kèm)")
 
             elif "Phân công" in loai_qd:
                 if n <= 3:

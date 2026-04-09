@@ -31,7 +31,7 @@ def build(data):
     p_kt = doc.add_paragraph()
     p_kt.alignment = WD_ALIGN_PARAGRAPH.CENTER
     para_spacing_body(p_kt, align=WD_ALIGN_PARAGRAPH.CENTER)
-    fmt_body(p_kt.add_run(f"(Kèm theo Quyết định số: {data['so_qd_display']} ngày {data['ngay_qd_display']})"))
+    fmt_body(p_kt.add_run(f"(Kèm theo Quyết định số: {data['so_qd_display']} {data['ngay_qd_display']})"))
     
     # 1 dòng trống tạo khoảng cách trước bảng
     p_blank = doc.add_paragraph()
