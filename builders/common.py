@@ -153,7 +153,7 @@ def add_header_table(doc, data):
     para_spacing_header(p6)
     
     p7 = c_right.add_paragraph()
-    para_spacing_header(p7, align=WD_ALIGN_PARAGRAPH.RIGHT) # Căn PHẢI dòng ngày
+    para_spacing_header(p7, align=WD_ALIGN_PARAGRAPH.CENTER) # Căn GIỮA dòng ngày
     fmt_header(p7.add_run(f"Hà Nội, {data['ngay_qd_display']}"), italic=True)
 
 def add_title(doc, tieu_de_ve_viec):
