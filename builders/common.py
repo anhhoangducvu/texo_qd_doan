@@ -57,13 +57,13 @@ def set_page_margins(doc):
         section.left_margin = Cm(3.0)
         section.right_margin = Cm(2.0)
 
-def fmt_header(run, bold=False):
+def fmt_header(run, bold=False, italic=False):
     """Font 12pt, dùng cho bảng header quốc hiệu và bảng footer ký tên."""
     run.font.name = FONT_NAME
     run._element.rPr.rFonts.set(qn('w:eastAsia'), FONT_NAME)
     run.font.size = FONT_SIZE_HEADER
     run.font.bold = bold
-    run.font.italic = False
+    run.font.italic = italic
 
 def fmt_body(run, bold=False, italic=False, size=None):
     """Font 13pt (mặc định), dùng cho toàn bộ thân văn bản."""
@@ -137,7 +137,7 @@ def add_header_table(doc, data):
     
     p3 = c_left.add_paragraph()
     para_spacing_header(p3, align=WD_ALIGN_PARAGRAPH.CENTER)
-    fmt_header(p3.add_run(f"Số: {data['so_qd_display']}"))
+    fmt_header(p3.add_run(f"Số: {data['so_qd_display']}"), italic=True)
     
     # --- Cột phải ---
     c_right = table.cell(0, 1)
@@ -154,7 +154,7 @@ def add_header_table(doc, data):
     
     p7 = c_right.add_paragraph()
     para_spacing_header(p7, align=WD_ALIGN_PARAGRAPH.RIGHT) # Căn PHẢI dòng ngày
-    fmt_header(p7.add_run(f"Hà Nội, {data['ngay_qd_display']}"))
+    fmt_header(p7.add_run(f"Hà Nội, {data['ngay_qd_display']}"), italic=True)
 
 def add_title(doc, tieu_de_ve_viec):
     """QUYẾT ĐỊNH + Về việc..."""
@@ -167,7 +167,7 @@ def add_title(doc, tieu_de_ve_viec):
     
     p_vv = doc.add_paragraph()
     para_spacing_body(p_vv, align=WD_ALIGN_PARAGRAPH.CENTER)
-    fmt_body(p_vv.add_run(f"Về việc: {tieu_de_ve_viec}"), bold=True)
+    fmt_body(p_vv.add_run(f"Về việc: {tieu_de_ve_viec}"), bold=True, italic=True)
 
 def add_tgd(doc):
     p = doc.add_paragraph()
