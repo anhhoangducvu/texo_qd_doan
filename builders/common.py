@@ -137,7 +137,7 @@ def add_header_table(doc, data):
     
     p3 = c_left.add_paragraph()
     para_spacing_header(p3, align=WD_ALIGN_PARAGRAPH.CENTER)
-    fmt_header(p3.add_run(f"Số: {data['so_qd_display']}"), italic=True)
+    fmt_header(p3.add_run(f"Số: {data['so_qd_display']}"), italic=False)
     
     # --- Cột phải ---
     c_right = table.cell(0, 1)
@@ -167,7 +167,7 @@ def add_title(doc, tieu_de_ve_viec):
     
     p_vv = doc.add_paragraph()
     para_spacing_body(p_vv, align=WD_ALIGN_PARAGRAPH.CENTER)
-    fmt_body(p_vv.add_run(f"Về việc: {tieu_de_ve_viec}"), bold=True, italic=True)
+    fmt_body(p_vv.add_run(f"Về việc: {tieu_de_ve_viec}"), bold=True, italic=False)
 
 def add_tgd(doc):
     p = doc.add_paragraph()
@@ -332,7 +332,7 @@ def add_footer_table(doc):
     c_left = table.cell(0, 0)
     p1 = c_left.paragraphs[0]
     para_spacing_header(p1)
-    fmt_header(p1.add_run("Nơi nhận:"), bold=True)
+    fmt_header(p1.add_run("Nơi nhận:"), bold=True, italic=True)
     
     for line in ["- Như điều 4;", "- Chủ đầu tư;", "- Lưu: VT."]:
         p = c_left.add_paragraph()
