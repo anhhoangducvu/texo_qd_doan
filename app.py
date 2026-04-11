@@ -59,7 +59,7 @@ def check_password():
         st.title("🔒 Bảo mật hệ thống")
         password = st.text_input("Vui lòng nhập mật khẩu truy cập:", type="password")
         if st.button("Đăng nhập"):
-            if password == "texo@2026":
+            if password == "texo2026":
                 st.session_state["password_correct"] = True
                 st.rerun()
             else:
