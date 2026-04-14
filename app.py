@@ -430,6 +430,7 @@ if st.button("🖨️ Tạo Quyết định", type="primary", use_container_widt
             
             ten_file = f"QD_{ma_mau}_{data['so_hd_texo'].replace('/', '-')}.docx"
             st.success(f"✅ Đã tạo xong file theo mẫu {ma_mau}!")
+            st.balloons()
             st.download_button(
                 label="📥 Tải xuống file .docx",
                 data=buf,

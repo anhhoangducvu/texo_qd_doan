@@ -349,6 +349,10 @@ def add_footer_table(doc):
     para_spacing_header(p3, align=WD_ALIGN_PARAGRAPH.CENTER)
     fmt_header(p3.add_run("TƯ VẤN VÀ ĐẦU TƯ"), bold=True)
     
+    p4 = c_right.add_paragraph()
+    para_spacing_header(p4, align=WD_ALIGN_PARAGRAPH.CENTER)
+    fmt_header(p4.add_run("KT. TỔNG GIÁM ĐỐC"), bold=True)
+    
     for _ in range(5): # Đã tăng lên 5 dòng trống
         p_blank = c_right.add_paragraph()
         para_spacing_header(p_blank)
