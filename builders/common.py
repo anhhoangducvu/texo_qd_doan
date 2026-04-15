@@ -178,7 +178,7 @@ def add_can_cu(doc, data):
     """Các dòng căn cứ"""
     can_cu_list = [
         "Căn cứ Điều lệ của Công ty Cổ phần TEXO Tư vấn và Đầu tư;",
-        f"Căn cứ hợp đồng kinh tế số: {data['so_hd_cdt']} ({data['so_hd_texo']}) ngày {data['ngay_hd']} giữa {data['ten_cdt']} với Công ty Cổ phần TEXO Tư vấn và Đầu Tư, về việc {data['noi_dung_hd']};",
+        f"Căn cứ hợp đồng kinh tế số: {data['so_hd_cdt']} ({data['so_hd_texo']}) ngày {data['ngay_hd']} giữa {data['ten_cdt']} với Công ty Cổ phần TEXO Tư vấn và Đầu tư, về việc {data['noi_dung_hd']};",
         "Căn cứ vào năng lực cán bộ và nhu cầu công tác;",
         f"Căn cứ vào đề nghị của Giám đốc {data['ten_tt']};",
         "Theo đề nghị của Phòng Kỹ thuật.",
