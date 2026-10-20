@@ -448,8 +448,6 @@ st.divider()
 st.warning(
     "⚠️ **Một số nội dung ứng dụng không thể tự động xử lý được**, "
     "người lập cần chủ động bổ sung sau khi tải file về:\n\n"
-    "- **Đường kẻ ngang** dưới *TƯ VẤN VÀ ĐẦU TƯ* và *Độc lập - Tự do - Hạnh phúc* "
-    "trong phần quốc hiệu\n"
     "- **Logo, con dấu chìm** hoặc hình ảnh nhận diện thương hiệu\n"
     "- **Căn chỉnh tinh** (tab, indent đặc biệt) nếu khác với định dạng mặc định\n"
     "- **Chữ ký số** hoặc chữ ký tay scan\n"

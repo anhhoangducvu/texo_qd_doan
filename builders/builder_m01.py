@@ -17,7 +17,7 @@ def build(data):
     fmt_body(r_tail)
     
     for i, m in enumerate(data["members"], 1):
-        format_member_line(doc, i, m)
+        format_member_line(doc, i, m, total=len(data["members"]))
     
     add_dieu_2_3_4(doc, data["ten_tt"], data["loai_tu_van"])
     add_footer_table(doc)

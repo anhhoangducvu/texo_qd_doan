@@ -75,7 +75,7 @@ def _add_danh_sach_page_m03_2(doc, data):
         # Cột Họ tên cán bộ mới
         p1 = row.cells[1].paragraphs[0]
         para_spacing_table(p1)
-        fmt_body(p1.add_run(f"{m['trinh_do']}. {m['ho_ten']}"))
+        fmt_body(p1.add_run(' '.join(x.strip() for x in (m.get('trinh_do') or '', m.get('ho_ten') or '') if x.strip())))
         set_cell_vertical_align_center(row.cells[1])
 
         # Cột Vị trí
@@ -88,5 +88,5 @@ def _add_danh_sach_page_m03_2(doc, data):
         p3 = row.cells[3].paragraphs[0]
         para_spacing_table(p3)
         if m.get("la_thay_the") and m.get("ho_ten_cu", "").strip():
-            fmt_body(p3.add_run(f"{m['trinh_do_cu']}. {m['ho_ten_cu']}"))
+            fmt_body(p3.add_run(' '.join(x.strip() for x in (m.get('trinh_do_cu') or '', m.get('ho_ten_cu') or '') if x.strip())))
         set_cell_vertical_align_center(row.cells[3])

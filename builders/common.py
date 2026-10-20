@@ -37,6 +37,34 @@ def add_paragraph_bottom_border(paragraph, space_pt=3):
     pBdr.append(bottom)
     pPr.append(pBdr)
 
+def add_underscore_divider(cell, char_count):
+    """
+    Dòng kẻ ngang sát chân chữ (lấy theo skill texo-van-ban-hanh-chinh):
+    một đoạn chỉ gồm ký tự gạch dưới '_', cỡ 5pt, in đậm, giãn dòng Single,
+    trước/sau 0pt, căn giữa. Chiều dài điều khiển bằng số ký tự
+    (42 ký tự dưới TƯ VẤN VÀ ĐẦU TƯ, 55 ký tự dưới Độc lập - Tự do - Hạnh phúc).
+    """
+    p = cell.add_paragraph()
+    run = p.add_run("_" * char_count)
+    run.font.name = FONT_NAME
+    run._element.get_or_add_rPr().get_or_add_rFonts().set(qn('w:eastAsia'), FONT_NAME)
+    run.font.size = Pt(5)
+    run.font.bold = True
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    pf = p.paragraph_format
+    pf.line_spacing_rule = WD_LINE_SPACING.SINGLE
+    pf.space_before = Pt(0)
+    pf.space_after = Pt(0)
+    return p
+
+def ten_can_bo(trinh_do, ho_ten):
+    """Ghép trình độ chuyên môn và họ tên, cách nhau một khoảng trắng (không dấu chấm)."""
+    return " ".join(x.strip() for x in (trinh_do or "", ho_ten or "") if x and x.strip())
+
+def dau_cuoi_dong(idx, total):
+    """Dấu cuối dòng trong danh sách: dòng cuối dấu chấm, các dòng trên dấu chấm phẩy."""
+    return "." if idx >= total else ";"
+
 def set_cell_vertical_align_center(cell):
     """Căn chữ giữa ô theo chiều cao (vertical center)."""
     tc = cell._tc
@@ -132,28 +160,28 @@ def add_header_table(doc, data):
     para_spacing_header(p2, align=WD_ALIGN_PARAGRAPH.CENTER)
     fmt_header(p2.add_run("TƯ VẤN VÀ ĐẦU TƯ"), bold=True)
     
-    p_blank_l = c_left.add_paragraph() # Dòng trống đối xứng
-    para_spacing_header(p_blank_l)
+    add_underscore_divider(c_left, 42)  # Dòng kẻ sát chân TƯ VẤN VÀ ĐẦU TƯ
     
     p3 = c_left.add_paragraph()
     para_spacing_header(p3, align=WD_ALIGN_PARAGRAPH.CENTER)
+    p3.paragraph_format.space_before = Pt(4)
     fmt_header(p3.add_run(f"Số: {data['so_qd_display']}"), italic=False)
     
     # --- Cột phải ---
     c_right = table.cell(0, 1)
     p4 = c_right.paragraphs[0]
     para_spacing_header(p4, align=WD_ALIGN_PARAGRAPH.CENTER)
-    fmt_header(p4.add_run("CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM"), bold=True)
+    fmt_header(p4.add_run("CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM"), bold=True)
     
     p5 = c_right.add_paragraph()
     para_spacing_header(p5, align=WD_ALIGN_PARAGRAPH.CENTER)
     fmt_header(p5.add_run("Độc lập - Tự do - Hạnh phúc"), bold=True)
     
-    p6 = c_right.add_paragraph()  # dòng trống
-    para_spacing_header(p6)
+    add_underscore_divider(c_right, 55)  # Dòng kẻ sát chân Độc lập - Tự do - Hạnh phúc
     
     p7 = c_right.add_paragraph()
     para_spacing_header(p7, align=WD_ALIGN_PARAGRAPH.CENTER) # Căn GIỮA dòng ngày
+    p7.paragraph_format.space_before = Pt(4)
     fmt_header(p7.add_run(f"Hà Nội, {data['ngay_qd_display']}"), italic=True)
 
 def add_title(doc, tieu_de_ve_viec):
@@ -210,14 +238,17 @@ def build_dieu1_header(doc, hanh_dong, loai_tu_van, data):
     fmt_body(r_content)
     return p1
 
-def format_member_line(doc, idx, member):
+def format_member_line(doc, idx, member, total=1):
     """Sinh dòng danh sách thành viên."""
     p = doc.add_paragraph()
     para_spacing_body(p) # Mặc định JUSTIFY
     p.paragraph_format.left_indent = Cm(1.5)
     p.paragraph_format.first_line_indent = Cm(-0.5) # Hanging indent cho số thứ tự
     
-    r = p.add_run(f"{idx}. {member['trinh_do']}. {member['ho_ten']}\t–\t{member['chuc_vu']}.")
+    r = p.add_run(
+        f"{idx}. {ten_can_bo(member['trinh_do'], member['ho_ten'])}"
+        f"\t–\t{member['chuc_vu']}{dau_cuoi_dong(idx, total)}"
+    )
     fmt_body(r)
 
 def build_lead_title(loai_tu_van: str) -> str:

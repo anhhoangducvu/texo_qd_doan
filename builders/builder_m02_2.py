@@ -75,7 +75,7 @@ def _add_danh_sach_page(doc, data):
 
         p_ten = row.cells[1].paragraphs[0]
         para_spacing_table(p_ten)
-        fb(p_ten.add_run(f"{m['trinh_do']}. {m['ho_ten']}"))
+        fb(p_ten.add_run(' '.join(x.strip() for x in (m.get('trinh_do') or '', m.get('ho_ten') or '') if x.strip())))
         set_cell_vertical_align_center(row.cells[1])
 
         p_cv = row.cells[2].paragraphs[0]

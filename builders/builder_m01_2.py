@@ -74,7 +74,7 @@ def build(data):
         # Ô họ tên – căn trái + vertical center
         p_ten = row.cells[1].paragraphs[0]
         para_spacing_table(p_ten) # Mặc định giãn 3pt/3pt/15pt
-        fmt_body(p_ten.add_run(f"{m['trinh_do']}. {m['ho_ten']}"))
+        fmt_body(p_ten.add_run(' '.join(x.strip() for x in (m.get('trinh_do') or '', m.get('ho_ten') or '') if x.strip())))
         set_cell_vertical_align_center(row.cells[1])
 
         # Ô chức vụ – căn trái + vertical center
