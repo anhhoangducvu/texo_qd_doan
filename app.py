@@ -1,6 +1,7 @@
 import streamlit as st
 import io
 import re
+from core import ui
 from builders import (
     builder_m01, builder_m01_2,
     builder_m02, builder_m02_2,
@@ -26,134 +27,27 @@ def build_ngay_qd_display(ngay_qd_raw: str) -> str:
 
     return "ngày ...... tháng ...... năm ......"
 
-# Page Config
-st.set_page_config(
-    page_title="TEXO – Lập Quyết định Đoàn Tư vấn",
-    page_icon="🏗️",
-    layout="wide"
-)
-
-def check_password():
-    """Returns `True` if the user had the correct password."""
-    if "password_correct" not in st.session_state:
-        st.session_state["password_correct"] = False
-
-    if st.session_state["password_correct"]:
-        return True
-
-    # Hiển thị form đăng nhập
-    st.markdown("""
-        <style>
-        .login-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 60vh;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-    
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        st.title("🔒 Bảo mật hệ thống")
-        password = st.text_input("Vui lòng nhập mật khẩu truy cập:", type="password")
-        if st.button("Đăng nhập"):
-            if password == "texo2026":
-                st.session_state["password_correct"] = True
-                st.rerun()
-            else:
-                st.error("😕 Mật khẩu không đúng")
-    return False
-
-if not check_password():
-    st.stop()
-
-# Custom Styling
-st.markdown("""
-<style>
-    /* Force Light Theme */
-    [data-testid="stAppViewContainer"] {
-        background-color: #f8f9fa !important;
-        color: #000000 !important;
-    }
-    [data-testid="stSidebar"] {
-        background-color: #ffffff !important;
-    }
-    .main {
-        background-color: #f8f9fa !important;
-    }
-    .stButton>button {
-        width: 100%;
-        border-radius: 5px;
-        height: 3em;
-        background-color: #1E3A8A !important;
-        color: #ffffff !important;
-        border: 1px solid #1E3A8A !important;
-    }
-    .stButton>button:hover {
-        background-color: #2563EB !important;
-        border-color: #2563EB !important;
-        color: #ffffff !important;
-    }
-    /* Đảm bảo icon hoặc text bên trong nút cũng màu trắng */
-    .stButton>button * {
-        color: #ffffff !important;
-    }
-    .stExpander {
-        background-color: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        margin-bottom: 20px;
-    }
-    h1, h2, h3, h4, h5, h6, p, label, .stMarkdown {
-        color: #1E3A8A !important;
-    }
-    /* Sửa lỗi khung viền ô nhập liệu bị mờ */
-    div[data-baseweb="input"], div[data-baseweb="select"], div[data-baseweb="textarea"] {
-        border: 1px solid #ced4da !important;
-        border-radius: 5px !important;
-        background-color: white !important;
-    }
-    input, textarea, select {
-        color: #1E3A8A !important;
-    }
-</style>
-""", unsafe_allow_html=True)
+APP_VERSION = "2.1"
+TITLE = "Lập Quyết định Đoàn Tư vấn"
+ui.setup("TEXO · " + TITLE, "📝")
+ui.gate(TITLE)
+ui.header(TITLE, "Phòng Kỹ thuật · Thành lập, bổ sung, thay thế, phân công đoàn tư vấn – xuất Word theo mẫu M01–M04")
 
 # Sidebar
-st.sidebar.title("📋 Loại Quyết định")
-loai_qd = st.sidebar.radio("Chọn loại văn bản cần lập:", [
-    "Thành lập đoàn Tư vấn",
-    "Bổ sung cán bộ (M02)",
-    "Bổ sung và thay thế cán bộ (M03)",
-    "Phân công nhiệm vụ (M04)",
-])
+with st.sidebar:
+    st.markdown("### 📋 Loại Quyết định")
+    loai_qd = st.radio("Chọn loại văn bản cần lập:", [
+        "Thành lập đoàn Tư vấn",
+        "Bổ sung cán bộ (M02)",
+        "Bổ sung và thay thế cán bộ (M03)",
+        "Phân công nhiệm vụ (M04)",
+    ])
+    st.divider()
+    ui.logout_button()
+    st.caption(f"Lập QĐ đoàn tư vấn v{APP_VERSION} · Xây dựng: Hoàng Đức Vũ")
 
-# Thông tin tác giả
-st.sidebar.divider()
-st.sidebar.markdown(
-    """
-    <div style='text-align: center;'>
-        <p style='margin-bottom: 5px; font-size: 0.9em; color: #666;'>Tác giả công cụ:</p>
-        <p style='font-weight: bold; color: #1E3A8A; margin-bottom: 0;'>Hoàng Đức Vũ</p>
-        <p style='font-style: italic; font-size: 0.85em; color: #666;'>Trưởng phòng Kỹ thuật - TEXO</p>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-# Main Title
-st.title("🏗️ TEXO – Lập Quyết định Đoàn Tư vấn")
-st.caption("Công ty Cổ phần TEXO Tư vấn và Đầu tư")
-
-st.info(
-    "ℹ️ **Ứng dụng này chỉ hỗ trợ tạo file Quyết định dạng .docx** – không thay thế "
-    "việc kiểm tra, rà soát nội dung của người lập.\n\n"
-    "Chất lượng văn bản phụ thuộc hoàn toàn vào sự cẩn trọng của người nhập liệu. "
-    "Sau khi tải file về, người lập **cần đọc lại toàn bộ nội dung** và đối chiếu với "
-    "các quy định hiện hành của Công ty trước khi trình ký."
-)
+ui.callout("ℹ️ App chỉ hỗ trợ <b>tạo file Quyết định .docx</b>, không thay thế việc rà soát của người lập. "
+           "Tải file về rồi <b>đọc lại toàn bộ</b>, đối chiếu quy định hiện hành của Công ty trước khi trình ký.", "blue")
 
 with st.expander("📖 Hướng dẫn sử dụng", expanded=False):
     st.markdown("""
@@ -380,14 +274,30 @@ data = {
 # PREVIEW & GENERATE
 errors, members_valid = validate(data)
 
+def _ma_mau(loai, n):
+    if loai == "Thành lập đoàn Tư vấn":
+        return "M01" if n <= 3 else "M01.2"
+    if "thay thế" in loai.lower():
+        return "M03" if n <= 1 else "M03.2"
+    if "Bổ sung" in loai:
+        return "M02" if n <= 3 else "M02.2"
+    return "M04" if n <= 3 else "M04.2"
+
+
+st.markdown("##### 📊 Tình trạng hồ sơ")
+n_ok = len(members_valid)
+k = st.columns(4)
+_ngan = {"Thành lập đoàn Tư vấn": "Thành lập", "Bổ sung cán bộ (M02)": "Bổ sung",
+         "Bổ sung và thay thế cán bộ (M03)": "Thay thế", "Phân công nhiệm vụ (M04)": "Phân công"}
+ui.kpi(k[0], _ngan.get(loai_qd, "–"), "Loại Quyết định", loai_qd.split(" (")[0])
+ui.kpi(k[1], _ma_mau(loai_qd, max(n_ok, 1)) if n_ok else "–", "Mẫu sẽ dùng", "tự chọn theo số người")
+ui.kpi(k[2], n_ok, "Cán bộ đã nhập", ten_tt or "chưa nhập Trung tâm", "blue" if n_ok else "orange")
+ui.kpi(k[3], len(errors), "Thông tin còn thiếu", "cần bổ sung" if errors else "đủ để tạo file",
+       "orange" if errors else "green")
 if errors:
-    st.warning("⚠️ Vui lòng hoàn thiện các thông tin còn thiếu để tạo file.")
-    with st.expander("Các lỗi cần sửa"):
+    with st.expander("⚠️ Các thông tin cần bổ sung", expanded=False):
         for e in errors:
             st.write(f"- {e}")
-else:
-    n = len(members_valid)
-    st.info(f"👥 Đoàn có **{n}** thành viên | 🏢 **{ten_tt}**")
 
 # Nút tạo quyết định luôn hiển thị ở dưới cùng
 if st.button("🖨️ Tạo Quyết định", type="primary", use_container_width=True):
@@ -433,7 +343,6 @@ if st.button("🖨️ Tạo Quyết định", type="primary", use_container_widt
             
             ten_file = f"QD_{ma_mau}_{data['so_hd_texo'].replace('/', '-')}.docx"
             st.success(f"✅ Đã tạo xong file theo mẫu {ma_mau}!")
-            st.balloons()
             st.download_button(
                 label="📥 Tải xuống file .docx",
                 data=buf,
@@ -445,24 +354,7 @@ if st.button("🖨️ Tạo Quyết định", type="primary", use_container_widt
             st.error(f"❌ Có lỗi xảy ra: {str(e)}")
 
 st.divider()
-st.warning(
-    "⚠️ **Một số nội dung ứng dụng không thể tự động xử lý được**, "
-    "người lập cần chủ động bổ sung sau khi tải file về:\n\n"
-    "- **Logo, con dấu chìm** hoặc hình ảnh nhận diện thương hiệu\n"
-    "- **Căn chỉnh tinh** (tab, indent đặc biệt) nếu khác với định dạng mặc định\n"
-    "- **Chữ ký số** hoặc chữ ký tay scan\n"
-    "- Các **nội dung bổ sung đặc thù** theo từng hợp đồng mà mẫu chung không bao quát\n\n"
-    "người lập có trách nhiệm đọc lại, đối chiếu quy định Công ty và hoàn thiện "
-    "file trước khi trình ký."
-)
-
-st.sidebar.markdown("---")
-st.markdown(
-    """
-    <div style='text-align: center; padding: 20px; color: #666;'>
-        <p style='margin: 0;'>Phát triển bởi <b>Hoàng Đức Vũ</b> – Trưởng phòng Kỹ thuật TEXO</p>
-        <p style='font-size: 0.8em; margin: 5px 0 0 0;'>© 2026 All Rights Reserved</p>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+ui.callout(
+    "⚠️ <b>App không tự xử lý được</b> – người lập bổ sung sau khi tải file: logo, dấu chìm, hình ảnh nhận diện; "
+    "căn chỉnh tinh (tab, thụt lề đặc biệt); chữ ký số hoặc chữ ký scan; nội dung đặc thù theo từng hợp đồng. "
+    "Người lập chịu trách nhiệm đọc lại, đối chiếu quy định Công ty và hoàn thiện file trước khi trình ký.", "orange")

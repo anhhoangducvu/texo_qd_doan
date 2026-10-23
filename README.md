@@ -19,7 +19,9 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-Ứng dụng mở tại `http://localhost:8501`. Màn hình đầu yêu cầu mật khẩu truy cập do Phòng Kỹ thuật cấp (khai báo trong hàm `check_password()` của `app.py`).
+Ứng dụng mở tại `http://localhost:8501`. Màn hình đầu yêu cầu mật khẩu truy cập (mặc định `texo2026`; đổi bằng `APP_PASSWORD` trong `.streamlit/secrets.toml`, mục Secrets của Streamlit Cloud hoặc biến môi trường).
+
+**Bản 2.1 – đồng bộ giao diện** với bộ app Phòng Kỹ thuật (Đề cương, Khối lượng, Hồ sơ chất lượng, Legal Reviewer): đăng nhập gọn có logo TEXO, đầu trang logo + tiêu đề, ô tình trạng hồ sơ (loại QĐ, mẫu sẽ dùng, số cán bộ, thông tin còn thiếu), nút Đăng xuất. Giao diện dùng chung ở `core/ui.py`, logo ở `assets/logo_texo.png`.
 
 Thư viện sử dụng: `streamlit >= 1.32.0`, `python-docx >= 1.1.0`.
 
